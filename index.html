@@ -932,26 +932,11 @@
             </div>
             
             <div class="auth-tabs">
-                <button class="auth-tab active" onclick="showAuthForm('login')">Login</button>
-                <button class="auth-tab" onclick="showAuthForm('register')">Register</button>
+                <button class="auth-tab active" onclick="showAuthForm('register')">Register</button>
+                <button class="auth-tab" onclick="showAuthForm('login')">Login</button>
             </div>
             
-            <div id="loginForm" class="auth-form active">
-                <div class="form-group">
-                    <input type="email" id="loginEmail" class="form-input" placeholder="Email address">
-                    <div id="loginEmailError" class="error-message">Please enter a valid email</div>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" class="form-input" placeholder="Password">
-                    <div id="loginPasswordError" class="error-message">Password is required</div>
-                </div>
-                <button class="btn btn-primary" style="width: 100%;" onclick="login()">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In
-                </button>
-            </div>
-            
-            <div id="registerForm" class="auth-form">
+            <div id="registerForm" class="auth-form active">
                 <div class="form-group">
                     <input type="text" id="registerUsername" class="form-input" placeholder="Username">
                     <div id="registerUsernameError" class="error-message">Username must be at least 3 characters</div>
@@ -974,6 +959,21 @@
                 <button class="btn btn-primary" style="width: 100%;" onclick="register()">
                     <i class="fas fa-user-plus"></i>
                     Create Account
+                </button>
+            </div>
+            
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" class="form-input" placeholder="Email address">
+                    <div id="loginEmailError" class="error-message">Please enter a valid email</div>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Password">
+                    <div id="loginPasswordError" class="error-message">Password is required</div>
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
                 </button>
             </div>
         </div>
@@ -1021,7 +1021,7 @@
                 <div class="sidebar-left">
                     <div class="card profile-section">
                         <div class="profile-avatar-container">
-                            <img src="" class="user-avatar" id="userAvatar" alt="User Avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iNTAiIGZpbGw9IiMxYTczZTgiLz4KPHRleHQgeD0iNTAiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZpbGw9IndoaXRlIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+VTxzdmcgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiB2aWV3Qm94PSIwIDAgMTAgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PC90ZXh0Pgo8L3N2Zz4K'">
+                            <img src="" class="user-avatar" id="userAvatar" alt="User Avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iNTAiIGZpbGw9IiMxYTczZTgiLz4KPHRleHQgeD0iNTAiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZpbGw9IndoaXRlIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZWRsZSI+VTxzdmcgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiB2aWV3Qm94PSIwIDAgMTAgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PC90ZXh0Pgo8L3N2Zz4K'">
                             <div class="avatar-upload" onclick="document.getElementById('avatarUpload').click()">
                                 <i class="fas fa-camera"></i>
                             </div>
@@ -1308,27 +1308,32 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <script>
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyApQINo-0HYujJLVTzmwrw1vzOGw6ViTAQ",
+            authDomain: "skideey1.firebaseapp.com",
+            projectId: "skideey1",
+            storageBucket: "skideey1.firebasestorage.app",
+            messagingSenderId: "707248424166",
+            appId: "1:707248424166:web:6609e9b8cac3fe5ed96727",
+            measurementId: "G-ECC7CX0RVE"
+        };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyApQINo-0HYujJLVTzmwrw1vzOGw6ViTAQ",
-  authDomain: "skideey1.firebaseapp.com",
-  projectId: "skideey1",
-  storageBucket: "skideey1.firebasestorage.app",
-  messagingSenderId: "707248424166",
-  appId: "1:707248424166:web:6609e9b8cac3fe5ed96727",
-  measurementId: "G-ECC7CX0RVE"
-};
+        // Initialize Firebase
+        let app;
+        let auth;
+        let db;
+        let storage;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            storage = firebase.storage();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
 
         // Main SKIDEEY Application
         class SkideeyApp {
@@ -1344,31 +1349,41 @@ const analytics = getAnalytics(app);
                 this.unsubscribeUsers = null;
                 this.unsubscribeGroups = null;
                 this.unsubscribePublicChat = null;
+                this.userActivity = {};
+                
                 this.initFirebaseAuth();
             }
 
             initFirebaseAuth() {
+                console.log("Initializing Firebase Auth...");
                 auth.onAuthStateChanged(async (user) => {
                     if (user) {
+                        console.log(`User signed in: ${user.email}`);
                         this.currentUser = user;
                         await this.loadUserData(user.uid);
+                        this.updateUserActivity();
                         this.showApp();
                         this.setupRealtimeListeners();
                     } else {
+                        console.log("No user signed in");
                         this.currentUser = null;
                         this.userData = null;
                         this.showAuthModal();
                         this.cleanupListeners();
                     }
+                }, (error) => {
+                    console.error(`Auth state change error: ${error.message}`);
                 });
             }
 
             async loadUserData(uid) {
                 try {
+                    console.log(`Loading user data for: ${uid}`);
                     const userDoc = await db.collection('users').doc(uid).get();
                     if (userDoc.exists) {
                         this.userData = userDoc.data();
                         this.userData.uid = uid;
+                        console.log(`User data loaded: ${this.userData.displayName}`);
                         this.renderUserProfile();
                     } else {
                         console.log("No user data found, this is a new user");
@@ -1378,27 +1393,65 @@ const analytics = getAnalytics(app);
                 }
             }
 
+            async updateUserActivity() {
+                if (!this.currentUser) return;
+                
+                try {
+                    // Update user's last active time
+                    await db.collection('users').doc(this.currentUser.uid).update({
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                        isOnline: true
+                    });
+                    
+                    // Set up cleanup for when user goes offline
+                    window.addEventListener('beforeunload', async () => {
+                        await this.setUserOffline();
+                    });
+                } catch (error) {
+                    console.error("Error updating user activity:", error);
+                }
+            }
+
+            async setUserOffline() {
+                if (!this.currentUser) return;
+                
+                try {
+                    await db.collection('users').doc(this.currentUser.uid).update({
+                        isOnline: false,
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (error) {
+                    console.error("Error setting user offline:", error);
+                }
+            }
+
             setupRealtimeListeners() {
-                // Real-time posts listener
+                console.log("Setting up real-time listeners...");
+                
+                // Real-time posts listener with algorithm
                 this.unsubscribePosts = db.collection('posts')
                     .orderBy('timestamp', 'desc')
                     .limit(50)
                     .onSnapshot((snapshot) => {
+                        console.log(`Posts snapshot received: ${snapshot.size} posts`);
                         this.posts = [];
                         snapshot.forEach(doc => {
                             const post = doc.data();
                             post.id = doc.id;
                             this.posts.push(post);
                         });
-                        this.renderPosts();
+                        // Apply algorithm to sort posts
+                        this.applyFeedAlgorithm();
                     }, (error) => {
                         console.error("Posts listener error:", error);
                     });
 
-                // Real-time users listener
+                // Real-time users listener for online users
                 this.unsubscribeUsers = db.collection('users')
+                    .where('isOnline', '==', true)
                     .limit(20)
                     .onSnapshot((snapshot) => {
+                        console.log(`Users snapshot received: ${snapshot.size} users`);
                         this.users = [];
                         snapshot.forEach(doc => {
                             const user = doc.data();
@@ -1409,12 +1462,15 @@ const analytics = getAnalytics(app);
                         });
                         this.renderOnlineUsers();
                         this.renderSuggestedUsers();
+                    }, (error) => {
+                        console.error("Users listener error:", error);
                     });
 
                 // Real-time groups listener
                 this.unsubscribeGroups = db.collection('groups')
                     .limit(20)
                     .onSnapshot((snapshot) => {
+                        console.log(`Groups snapshot received: ${snapshot.size} groups`);
                         this.groups = [];
                         snapshot.forEach(doc => {
                             const group = doc.data();
@@ -1422,42 +1478,100 @@ const analytics = getAnalytics(app);
                             this.groups.push(group);
                         });
                         this.renderGroups();
+                    }, (error) => {
+                        console.error("Groups listener error:", error);
                     });
 
                 // Real-time public chat listener
                 this.setupPublicChatListener();
             }
 
+            applyFeedAlgorithm() {
+                // Enhanced algorithm that considers:
+                // 1. Recent posts (timestamp)
+                // 2. Popular posts (likes and comments)
+                // 3. User interests matching
+                // 4. Following relationships
+                
+                const sortedPosts = this.posts
+                    .map(post => {
+                        let score = 0;
+                        
+                        // Time-based scoring (newer posts get higher score)
+                        const now = new Date();
+                        const postTime = post.timestamp?.toDate() || now;
+                        const hoursDiff = (now - postTime) / (1000 * 60 * 60);
+                        score += Math.max(0, 100 - hoursDiff * 2); // Recent posts get up to 100 points
+                        
+                        // Engagement scoring
+                        const likes = post.likes?.length || 0;
+                        const comments = post.comments?.length || 0;
+                        score += likes * 5 + comments * 3;
+                        
+                        // Interest matching
+                        if (this.userData?.interests) {
+                            const postText = (post.content || '').toLowerCase();
+                            const matchedInterests = this.userData.interests.filter(interest => 
+                                postText.includes(interest.toLowerCase())
+                            );
+                            score += matchedInterests.length * 10;
+                        }
+                        
+                        // Following boost (if post is from someone you follow)
+                        if (this.userData?.following?.includes(post.authorId)) {
+                            score += 50;
+                        }
+                        
+                        return { ...post, algorithmScore: score };
+                    })
+                    .sort((a, b) => b.algorithmScore - a.algorithmScore);
+                
+                this.renderPosts(sortedPosts);
+            }
+
             setupPublicChatListener() {
+                console.log("Setting up public chat listener...");
                 this.unsubscribePublicChat = db.collection('publicChat')
                     .orderBy('timestamp', 'asc')
                     .limit(100)
                     .onSnapshot((snapshot) => {
+                        console.log(`Chat snapshot received: ${snapshot.size} messages`);
                         const messagesDiv = document.getElementById('publicChatMessages');
-                        messagesDiv.innerHTML = '';
-                        snapshot.forEach(doc => {
-                            const message = doc.data();
-                            this.displayChatMessage(message, 'public');
-                        });
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        if (messagesDiv) {
+                            messagesDiv.innerHTML = '';
+                            snapshot.forEach(doc => {
+                                const message = doc.data();
+                                this.displayChatMessage(message, 'public');
+                                console.log(`Chat message: ${message.author}: ${message.content}`);
+                            });
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+                    }, (error) => {
+                        console.error("Chat listener error:", error);
                     });
             }
 
             cleanupListeners() {
+                console.log("Cleaning up listeners...");
                 if (this.unsubscribePosts) this.unsubscribePosts();
                 if (this.unsubscribeUsers) this.unsubscribeUsers();
                 if (this.unsubscribeGroups) this.unsubscribeGroups();
                 if (this.unsubscribePublicChat) this.unsubscribePublicChat();
+                
+                // Set user offline when leaving
+                this.setUserOffline();
             }
 
             async registerUser(username, email, password) {
                 try {
+                    console.log(`Registering user: ${username}, ${email}`);
                     if (!this.validatePassword(password)) {
                         throw new Error('Password does not meet requirements');
                     }
 
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
+                    console.log(`User created: ${user.uid}`);
 
                     // Create user profile
                     await db.collection('users').doc(user.uid).set({
@@ -1467,6 +1581,8 @@ const analytics = getAnalytics(app);
                         avatarUrl: '',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                        isOnline: true,
                         interests: this.userInterests,
                         postsCount: 0,
                         followers: [],
@@ -1474,29 +1590,38 @@ const analytics = getAnalytics(app);
                         groups: []
                     });
 
+                    console.log("User profile created successfully");
                     return user;
                 } catch (error) {
+                    console.log(`Registration failed: ${error.message}`);
                     throw error;
                 }
             }
 
             async loginUser(email, password) {
                 try {
+                    console.log(`Logging in user: ${email}`);
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
+                    console.log(`User logged in: ${user.uid}`);
                     
-                    // Update last login time
-                    await db.collection('users').doc(user.uid).set({
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
+                    // Update user status
+                    await db.collection('users').doc(user.uid).update({
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                        isOnline: true
+                    });
                     
                     return user;
                 } catch (error) {
+                    console.log(`Login failed: ${error.message}`);
                     throw error;
                 }
             }
 
-            logout() {
+            async logout() {
+                console.log("Logging out user");
+                await this.setUserOffline();
                 auth.signOut();
             }
 
@@ -1538,9 +1663,13 @@ const analytics = getAnalytics(app);
 
             async createPost() {
                 const content = document.getElementById('postContent').value.trim();
-                if ((!content && this.attachments.length === 0) || !this.currentUser) return;
+                if ((!content && this.attachments.length === 0) || !this.currentUser) {
+                    console.log("Cannot create post: empty content or no user");
+                    return;
+                }
 
                 try {
+                    console.log("Creating new post...");
                     const postData = {
                         author: this.userData?.displayName || this.currentUser.email,
                         authorId: this.currentUser.uid,
@@ -1555,6 +1684,7 @@ const analytics = getAnalytics(app);
 
                     // Upload attachments if any
                     for (const attachment of this.attachments) {
+                        console.log(`Uploading attachment: ${attachment.file.name}`);
                         const mediaRef = storage.ref().child(`posts/${this.currentUser.uid}/${Date.now()}_${attachment.file.name}`);
                         const snapshot = await mediaRef.put(attachment.file);
                         const downloadURL = await snapshot.ref.getDownloadURL();
@@ -1567,6 +1697,7 @@ const analytics = getAnalytics(app);
                     }
 
                     await db.collection('posts').add(postData);
+                    console.log("Post created successfully");
                     
                     // Update user's post count
                     await db.collection('users').doc(this.currentUser.uid).set({
@@ -1580,6 +1711,7 @@ const analytics = getAnalytics(app);
                     
                     alert('Post created successfully!');
                 } catch (error) {
+                    console.log(`Error creating post: ${error.message}`);
                     console.error("Error creating post:", error);
                     alert('Error creating post: ' + error.message);
                 }
@@ -1686,9 +1818,13 @@ const analytics = getAnalytics(app);
             }
 
             async sendPublicChatMessage(content) {
-                if (!content.trim() || !this.currentUser) return;
+                if (!content.trim() || !this.currentUser) {
+                    console.log("Cannot send chat message: empty content or no user");
+                    return;
+                }
 
                 try {
+                    console.log(`Sending chat message: ${content}`);
                     const message = {
                         author: this.userData?.displayName || this.currentUser.email,
                         authorId: this.currentUser.uid,
@@ -1698,13 +1834,20 @@ const analytics = getAnalytics(app);
                     };
 
                     await db.collection('publicChat').add(message);
+                    console.log("Chat message sent successfully");
                 } catch (error) {
+                    console.log(`Error sending chat message: ${error.message}`);
                     console.error("Error sending chat message:", error);
                 }
             }
 
             displayChatMessage(message, type) {
                 const messagesDiv = document.getElementById(type + 'ChatMessages');
+                if (!messagesDiv) {
+                    console.log(`Chat messages div not found for type: ${type}`);
+                    return;
+                }
+                
                 const messageDiv = document.createElement('div');
                 
                 const isOwn = message.authorId === this.currentUser.uid;
@@ -1733,11 +1876,13 @@ const analytics = getAnalytics(app);
             showApp() {
                 document.getElementById('authModal').style.display = 'none';
                 document.getElementById('appContent').classList.remove('hidden');
+                console.log("App content shown");
             }
 
             showAuthModal() {
                 document.getElementById('authModal').style.display = 'flex';
                 document.getElementById('appContent').classList.add('hidden');
+                console.log("Auth modal shown");
             }
 
             renderUserProfile() {
@@ -1747,6 +1892,12 @@ const analytics = getAnalytics(app);
                     // Update names
                     document.getElementById('userName').textContent = displayName;
                     document.getElementById('headerUserName').textContent = displayName;
+                    
+                    // Update avatar if available
+                    if (this.userData.avatarUrl) {
+                        document.getElementById('userAvatar').src = this.userData.avatarUrl;
+                        document.getElementById('headerUserAvatar').src = this.userData.avatarUrl;
+                    }
                     
                     // Update stats
                     document.getElementById('postCount').textContent = this.userData.postsCount || 0;
@@ -1759,11 +1910,11 @@ const analytics = getAnalytics(app);
                 }
             }
 
-            renderPosts() {
+            renderPosts(posts) {
                 const postsFeed = document.getElementById('postsFeed');
                 postsFeed.innerHTML = '';
 
-                if (this.posts.length === 0) {
+                if (posts.length === 0) {
                     postsFeed.innerHTML = `
                         <div class="card text-center">
                             <h3>No posts yet</h3>
@@ -1773,7 +1924,7 @@ const analytics = getAnalytics(app);
                     return;
                 }
 
-                this.posts.forEach(post => {
+                posts.forEach(post => {
                     const isLiked = post.likes && post.likes.includes(this.currentUser.uid);
                     
                     // Format timestamp
@@ -2013,8 +2164,10 @@ const analytics = getAnalytics(app);
             }
         }
 
-        // Initialize the app
-        const skideeyApp = new SkideeyApp();
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.skideeyApp = new SkideeyApp();
+        });
 
         // Global functions
         function showAuthForm(formName) {

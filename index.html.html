@@ -15,10 +15,10 @@
         }
 
         :root {
-            --primary: #1a73e8; /* Professional Blue */
+            --primary: #1a73e8;
             --primary-dark: #0d47a1;
             --primary-light: #4285f4;
-            --secondary: #ff6d00; /* Professional Orange */
+            --secondary: #ff6d00;
             --secondary-dark: #e65100;
             --secondary-light: #ff9800;
             --dark: #202124;
@@ -1308,14 +1308,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <script>
-        // Firebase Configuration - REPLACE WITH YOUR ACTUAL CONFIG
+        // Your Firebase Configuration
         const firebaseConfig = {
-            apiKey: "your-api-key-here",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "your-app-id"
+            apiKey: "AIzaSyApQINo-0HYujJLVTzmwrw1vzOGw6ViTAQ",
+            authDomain: "skideey1.firebaseapp.com",
+            projectId: "skideey1",
+            storageBucket: "skideey1.firebasestorage.app",
+            messagingSenderId: "707248424166",
+            appId: "1:707248424166:web:d945c8628c732d26d96727"
         };
 
         // Initialize Firebase
@@ -1324,7 +1324,7 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // Main SKIDEEY Application with Firebase
+        // Main SKIDEEY Application
         class SkideeyApp {
             constructor() {
                 this.currentUser = null;
@@ -1365,7 +1365,7 @@
                         this.userData.uid = uid;
                         this.renderUserProfile();
                     } else {
-                        console.error("User data not found");
+                        console.log("No user data found, this is a new user");
                     }
                 } catch (error) {
                     console.error("Error loading user data:", error);
@@ -1385,6 +1385,8 @@
                             this.posts.push(post);
                         });
                         this.renderPosts();
+                    }, (error) => {
+                        console.error("Posts listener error:", error);
                     });
 
                 // Real-time users listener
@@ -1451,6 +1453,7 @@
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
 
+                    // Create user profile
                     await db.collection('users').doc(user.uid).set({
                         username: username,
                         email: email,
@@ -1476,9 +1479,10 @@
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
                     
-                    await db.collection('users').doc(user.uid).update({
+                    // Update last login time
+                    await db.collection('users').doc(user.uid).set({
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    }, { merge: true });
                     
                     return user;
                 } catch (error) {
@@ -1532,9 +1536,9 @@
 
                 try {
                     const postData = {
-                        author: this.userData.displayName,
+                        author: this.userData?.displayName || this.currentUser.email,
                         authorId: this.currentUser.uid,
-                        authorAvatar: this.userData.avatarUrl || '',
+                        authorAvatar: this.userData?.avatarUrl || '',
                         content: content,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         likes: [],
@@ -1559,16 +1563,19 @@
                     await db.collection('posts').add(postData);
                     
                     // Update user's post count
-                    await db.collection('users').doc(this.currentUser.uid).update({
+                    await db.collection('users').doc(this.currentUser.uid).set({
                         postsCount: firebase.firestore.FieldValue.increment(1)
-                    });
+                    }, { merge: true });
 
                     // Clear form
                     document.getElementById('postContent').value = '';
                     this.attachments = [];
                     this.renderAttachments();
+                    
+                    alert('Post created successfully!');
                 } catch (error) {
                     console.error("Error creating post:", error);
+                    alert('Error creating post: ' + error.message);
                 }
             }
 
@@ -1577,7 +1584,10 @@
                 const description = document.getElementById('groupDescription').value.trim();
                 const privacy = document.getElementById('groupPrivacy').value;
 
-                if (!name || !this.currentUser) return;
+                if (!name || !this.currentUser) {
+                    alert('Please enter a group name');
+                    return;
+                }
 
                 try {
                     const groupData = {
@@ -1585,7 +1595,7 @@
                         description: description,
                         privacy: privacy,
                         creator: this.currentUser.uid,
-                        creatorName: this.userData.displayName,
+                        creatorName: this.userData?.displayName || this.currentUser.email,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         members: [this.currentUser.uid],
                         memberCount: 1,
@@ -1594,16 +1604,14 @@
 
                     await db.collection('groups').add(groupData);
                     
-                    // Add group to user's groups
-                    await db.collection('users').doc(this.currentUser.uid).update({
-                        groups: firebase.firestore.FieldValue.arrayUnion(groupData)
-                    });
-
                     document.getElementById('createGroupModal').style.display = 'none';
                     document.getElementById('groupName').value = '';
                     document.getElementById('groupDescription').value = '';
+                    
+                    alert('Group created successfully!');
                 } catch (error) {
                     console.error("Error creating group:", error);
+                    alert('Error creating group: ' + error.message);
                 }
             }
 
@@ -1612,28 +1620,16 @@
 
                 try {
                     const groupRef = db.collection('groups').doc(groupId);
-                    const groupDoc = await groupRef.get();
                     
-                    if (!groupDoc.exists) return;
-
                     await groupRef.update({
                         members: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
                         memberCount: firebase.firestore.FieldValue.increment(1)
                     });
 
-                    // Add group to user's groups
-                    const group = groupDoc.data();
-                    await db.collection('users').doc(this.currentUser.uid).update({
-                        groups: firebase.firestore.FieldValue.arrayUnion({
-                            id: groupId,
-                            name: group.name,
-                            joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        })
-                    });
-
                     alert('Successfully joined the group!');
                 } catch (error) {
                     console.error("Error joining group:", error);
+                    alert('Error joining group: ' + error.message);
                 }
             }
 
@@ -1667,9 +1663,9 @@
 
                 try {
                     const comment = {
-                        author: this.userData.displayName,
+                        author: this.userData?.displayName || this.currentUser.email,
                         authorId: this.currentUser.uid,
-                        authorAvatar: this.userData.avatarUrl || '',
+                        authorAvatar: this.userData?.avatarUrl || '',
                         content: content.trim(),
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     };
@@ -1688,9 +1684,9 @@
 
                 try {
                     const message = {
-                        author: this.userData.displayName,
+                        author: this.userData?.displayName || this.currentUser.email,
                         authorId: this.currentUser.uid,
-                        authorAvatar: this.userData.avatarUrl || '',
+                        authorAvatar: this.userData?.avatarUrl || '',
                         content: content.trim(),
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     };
@@ -1740,15 +1736,7 @@
 
             renderUserProfile() {
                 if (this.userData) {
-                    const displayName = this.userData.displayName || 'User';
-                    
-                    // Update avatar
-                    const avatarElements = document.querySelectorAll('#userAvatar, #headerUserAvatar');
-                    avatarElements.forEach(el => {
-                        if (this.userData.avatarUrl) {
-                            el.src = this.userData.avatarUrl;
-                        }
-                    });
+                    const displayName = this.userData.displayName || this.currentUser.email;
                     
                     // Update names
                     document.getElementById('userName').textContent = displayName;
@@ -1758,6 +1746,10 @@
                     document.getElementById('postCount').textContent = this.userData.postsCount || 0;
                     document.getElementById('followerCount').textContent = this.userData.followers ? this.userData.followers.length : 0;
                     document.getElementById('followingCount').textContent = this.userData.following ? this.userData.following.length : 0;
+                } else {
+                    const displayName = this.currentUser.email;
+                    document.getElementById('userName').textContent = displayName;
+                    document.getElementById('headerUserName').textContent = displayName;
                 }
             }
 
@@ -1906,11 +1898,15 @@
                     userElement.className = 'user-item';
                     userElement.innerHTML = `
                         <img src="${user.avatarUrl || ''}" class="user-avatar-small" alt="${user.displayName}" onerror="this.style.display='none'">
-                        <div>${user.displayName}</div>
+                        <div>${user.displayName || user.email}</div>
                         <div class="user-status"></div>
                     `;
                     onlineUsers.appendChild(userElement);
                 });
+
+                if (this.users.length === 0) {
+                    onlineUsers.innerHTML = '<div class="text-center text-sm">No other users online</div>';
+                }
             }
 
             renderSuggestedUsers() {
@@ -1922,13 +1918,17 @@
                     userElement.className = 'user-item';
                     userElement.innerHTML = `
                         <img src="${user.avatarUrl || ''}" class="user-avatar-small" alt="${user.displayName}" onerror="this.style.display='none'">
-                        <div>${user.displayName}</div>
+                        <div>${user.displayName || user.email}</div>
                         <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
                             <i class="fas fa-user-plus"></i>
                         </button>
                     `;
                     suggestedUsers.appendChild(userElement);
                 });
+
+                if (this.users.length === 0) {
+                    suggestedUsers.innerHTML = '<div class="text-center text-sm">No suggestions yet</div>';
+                }
             }
 
             renderAttachments() {
@@ -1993,27 +1993,16 @@
 
                 try {
                     const groupRef = db.collection('groups').doc(groupId);
-                    const groupDoc = await groupRef.get();
                     
-                    if (!groupDoc.exists) return;
-
                     await groupRef.update({
                         members: firebase.firestore.FieldValue.arrayRemove(this.currentUser.uid),
                         memberCount: firebase.firestore.FieldValue.increment(-1)
                     });
 
-                    // Remove group from user's groups
-                    const group = groupDoc.data();
-                    await db.collection('users').doc(this.currentUser.uid).update({
-                        groups: firebase.firestore.FieldValue.arrayRemove({
-                            id: groupId,
-                            name: group.name
-                        })
-                    });
-
                     alert('Successfully left the group!');
                 } catch (error) {
                     console.error("Error leaving group:", error);
+                    alert('Error leaving group: ' + error.message);
                 }
             }
         }
@@ -2204,8 +2193,10 @@
         function sendPublicChatMessage() {
             const input = document.getElementById('publicChatInput');
             const content = input.value;
-            skideeyApp.sendPublicChatMessage(content);
-            input.value = '';
+            if (content.trim()) {
+                skideeyApp.sendPublicChatMessage(content);
+                input.value = '';
+            }
         }
 
         function joinPrivateChat() {
@@ -2219,6 +2210,28 @@
         function sendPrivateChatMessage() {
             alert('Private chat message sending would be implemented here');
         }
+
+        // Render user interests
+        function renderUserInterests() {
+            const userInterests = document.getElementById('userInterests');
+            userInterests.innerHTML = '';
+            
+            const interests = ['Tech', 'Innovation', 'Design', 'Creative', 'Future', 'AI'];
+            interests.forEach(interest => {
+                const interestElement = document.createElement('div');
+                interestElement.className = 'user-item';
+                interestElement.innerHTML = `
+                    <i class="fas fa-hashtag" style="color: var(--secondary);"></i>
+                    <div>${interest}</div>
+                `;
+                userInterests.appendChild(interestElement);
+            });
+        }
+
+        // Initialize interests on load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderUserInterests();
+        });
     </script>
 </body>
 </html>
